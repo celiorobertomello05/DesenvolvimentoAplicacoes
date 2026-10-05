@@ -4,11 +4,12 @@ version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: ^3.13.3
+  sdk: ^3.10.1
 
 # Add regular dependencies here.
 dependencies:
   path: ^1.9.0
+  interact: ^2.1.1
 
 dev_dependencies:
   lints: ^6.0.0
