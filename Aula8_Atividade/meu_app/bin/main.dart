@@ -1,159 +1,240 @@
-import 'package:interact/interact.dart';
+import 'dart:io';
+
 import 'package:meu_app/carro.dart';
 import 'package:meu_app/moto.dart';
 import 'package:meu_app/veiculo.dart';
 
-import 'dart:io';
+// ── Utilitários de terminal ───────────────────────────────────────────────────
 
 void limparTela() {
   print('\x1B[2J\x1B[0f');
 }
 
+void pausar() {
+  stdout.write('\nPressione Enter para continuar...');
+  stdin.readLineSync();
+}
+
+// ── Utilitários de entrada ────────────────────────────────────────────────────
+
+/// Lê texto e rejeita entrada vazia, ficando em loop até o usuário digitar algo.
+String lerTexto(String prompt) {
+  while (true) {
+    stdout.write('$prompt ');
+    final entrada = stdin.readLineSync()?.trim() ?? '';
+    if (entrada.isNotEmpty) return entrada;
+    print('  Entrada não pode ser vazia. Tente novamente.');
+  }
+}
+
+/// Lê um double com validação de formato.
+double lerDouble(String prompt) {
+  while (true) {
+    stdout.write('$prompt ');
+    final entrada = stdin.readLineSync()?.trim() ?? '';
+    final valor = double.tryParse(entrada);
+    if (valor != null) return valor;
+    print('  Valor inválido. Digite um número (ex: 120.50).');
+  }
+}
+
+/// Lê um int com validação de formato.
+int lerInt(String prompt) {
+  while (true) {
+    stdout.write('$prompt ');
+    final entrada = stdin.readLineSync()?.trim() ?? '';
+    final valor = int.tryParse(entrada);
+    if (valor != null) return valor;
+    print('  Valor inválido. Digite um número inteiro.');
+  }
+}
+
+// ── Menu e seleção ────────────────────────────────────────────────────────────
+
+int exibirMenu() {
+  print('');
+  print('╔══════════════════════════════════╗');
+  print('║   AGÊNCIA DE VEÍCULOS DO CELIO   ║');
+  print('╠══════════════════════════════════╣');
+  print('║  1 - Cadastrar Carro             ║');
+  print('║  2 - Cadastrar Moto              ║');
+  print('║  3 - Listar Veículos             ║');
+  print('║  4 - Editar Veículo              ║');
+  print('║  5 - Excluir Veículo             ║');
+  print('║  6 - Alugar Veículo              ║');
+  print('║  0 - Sair                        ║');
+  print('╚══════════════════════════════════╝');
+  return lerInt('Escolha uma opção:');
+}
+
+/// Exibe a lista numerada e retorna o índice (base 0) escolhido pelo usuário.
+int selecionarVeiculo(List<Veiculo> veiculos, String titulo) {
+  print('\n--- $titulo ---');
+  for (var i = 0; i < veiculos.length; i++) {
+    print('\n[${i + 1}]');
+    print(veiculos[i].exibirInformacoes());
+  }
+  while (true) {
+    final pos = lerInt('Digite o número do veículo (1 a ${veiculos.length}):');
+    if (pos >= 1 && pos <= veiculos.length) return pos - 1;
+    print('  Posição inválida. Digite um número entre 1 e ${veiculos.length}.');
+  }
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
+
 void main() {
   limparTela();
-  List<Veiculo> veiculos = [];
+  final List<Veiculo> veiculos = [];
 
   while (true) {
-    final options = [
-      'Cadastrar Carro',
-      'Cadastrar Moto',
-      'Listar Veiculos',
-      'Editar Veiculo',
-      'Excluir Veiculo',
-      'Sair',
-    ];
-
-    final index = Select(
-      prompt: "Agencia de Carros do Celio",
-      options: options,
-    ).interact();
-
+    final opcao = exibirMenu();
     limparTela();
 
-    if (index == 0) {
-      print("Digite a placa do veiculo");
-      String placa = stdin.readLineSync()!;
+    switch (opcao) {
 
-      print("Digite o Modelo do Veiculo");
-      String modelo = stdin.readLineSync()!;
+      // ── 1: Cadastrar Carro ────────────────────────────────────────────────
+      case 1:
+        try {
+          final marca         = lerTexto('Marca do veículo:');
+          final modelo        = lerTexto('Modelo do veículo:');
+          final valorDiaria   = lerDouble('Valor da diária (R\$):');
+          final quantidade    = lerInt('Quantidade disponível:');
+          final portas        = lerInt('Quantidade de portas:');
 
-      print("Digite o valor da Diária");
-      double novoValorDiaria = double.parse(stdin.readLineSync()!);
+          final carro = Carro(marca, modelo, valorDiaria, quantidade, portas);
+          veiculos.add(carro);
 
-      print("Digite a quantidade de portas");
-      int novoQuantidadePortas = int.parse(stdin.readLineSync()!);
-
-      Carro carro = Carro(placa, modelo, novoValorDiaria, novoQuantidadePortas);
-
-      veiculos.add(carro);
-
-      print("\nVeiculo cadastrado com sucesso!");
-      print(carro.exibirInformacoes());
-
-      stdin.readLineSync();
-      limparTela();
-    } else if (index == 1) {
-      print("Digite a placa do veiculo");
-      String placa = stdin.readLineSync()!;
-
-      print("Digite o Modelo do Veiculo");
-      String modelo = stdin.readLineSync()!;
-
-      print("Digite o valor da Diária");
-      double novoValorDiaria = double.parse(stdin.readLineSync()!);
-
-      print("Digite a quantidade de cilindradas");
-      int novaCilindradas = int.parse(stdin.readLineSync()!);
-
-      Moto moto = Moto(placa, modelo, novoValorDiaria, novaCilindradas);
-
-      veiculos.add(moto);
-
-      print("\nMoto cadastrada com sucesso!");
-      print(moto.exibirInformacoes());
-      stdin.readLineSync();
-      limparTela();
-    } else if (index == 2) {
-      if (veiculos.isEmpty) {
-        print("Nenhuma informação encontrada");
-        stdin.readLineSync();
+          print('\nCarro cadastrado com sucesso!');
+          print(carro.exibirInformacoes());
+        } on ArgumentError catch (e) {
+          print('\nErro de validação: ${e.message}');
+        }
+        pausar();
         limparTela();
 
-        continue;
-      }
-      for (var veiculo in veiculos) {
-        print(veiculo.exibirInformacoes());
-      }
-      stdin.readLineSync();
-      limparTela();
-    } else if (index == 3) {
-      if (veiculos.isEmpty) {
-        print("Nenhum veículo cadastrado.");
-        stdin.readLineSync();
+      // ── 2: Cadastrar Moto ─────────────────────────────────────────────────
+      case 2:
+        try {
+          final marca         = lerTexto('Marca do veículo:');
+          final modelo        = lerTexto('Modelo do veículo:');
+          final valorDiaria   = lerDouble('Valor da diária (R\$):');
+          final quantidade    = lerInt('Quantidade disponível:');
+          final cilindradas   = lerInt('Quantidade de cilindradas:');
+
+          final moto = Moto(marca, modelo, valorDiaria, quantidade, cilindradas);
+          veiculos.add(moto);
+
+          print('\nMoto cadastrada com sucesso!');
+          print(moto.exibirInformacoes());
+        } on ArgumentError catch (e) {
+          print('\nErro de validação: ${e.message}');
+        }
+        pausar();
         limparTela();
 
-        continue;
-      }
-
-      List<String> opcoesEditar = [];
-      for (var veiculo in veiculos) {
-        opcoesEditar.add(veiculo.exibirInformacoes());
-      }
-
-      final indexEditar = Select(
-        prompt: "Selecione um veiculo para Editar",
-        options: opcoesEditar,
-      ).interact();
-
-      Veiculo veiculo = veiculos[indexEditar];
-
-      print("Digite a nova placa do veiculo");
-      veiculo.placa = stdin.readLineSync()!;
-
-      print("Digite o novo Modelo do Veiculo");
-      veiculo.modelo = stdin.readLineSync()!;
-
-      print("Digite o novo valor da Diária");
-      veiculo.valorDiaria = double.parse(stdin.readLineSync()!);
-
-      if (veiculo is Carro) {
-        print("Digite o novo numero de portas");
-        veiculo.quantidadePortas = int.parse(stdin.readLineSync()!);
-      } else if (veiculo is Moto) {
-        print("Digite o novo valor de cilindradas");
-        veiculo.cilindradas = int.parse(stdin.readLineSync()!);
-      }
-      print("\nVeiculo editado com sucesso!");
-      print(veiculo.exibirInformacoes());
-
-      stdin.readLineSync();
-      limparTela();
-    } else if (index == 4) {
-      if (veiculos.isEmpty) {
-        print("Nenhum veículo cadastrado.");
-        stdin.readLineSync();
+      // ── 3: Listar Veículos ────────────────────────────────────────────────
+      case 3:
+        if (veiculos.isEmpty) {
+          print('Nenhum veículo cadastrado.');
+        } else {
+          for (var i = 0; i < veiculos.length; i++) {
+            print('\n[${i + 1}]');
+            print(veiculos[i].exibirInformacoes());
+          }
+        }
+        pausar();
         limparTela();
 
-        continue;
-      }
+      // ── 4: Editar Veículo ─────────────────────────────────────────────────
+      case 4:
+        if (veiculos.isEmpty) {
+          print('Nenhum veículo cadastrado.');
+          pausar();
+          limparTela();
+          break;
+        }
 
-      List<String> opcoesVeiculos = [];
-      for (var veiculo in veiculos) {
-        opcoesVeiculos.add(veiculo.exibirInformacoes());
-      }
-      final indexOpcaoVeiculo = Select(
-        prompt: "Selecione o veiculo para excluir",
-        options: opcoesVeiculos,
-      ).interact();
-      veiculos.removeAt(indexOpcaoVeiculo);
+        final indexEditar = selecionarVeiculo(veiculos, 'Editar Veículo');
+        final veiculoEditar = veiculos[indexEditar];
+        limparTela();
 
-      print("\nVeiculo excluido com sucesso!");
+        try {
+          veiculoEditar.marca       = lerTexto('Nova marca do veículo:');
+          veiculoEditar.modelo      = lerTexto('Novo modelo do veículo:');
+          veiculoEditar.valorDiaria = lerDouble('Novo valor da diária (R\$):');
+          veiculoEditar.quantidade  = lerInt('Nova quantidade disponível:');
 
-      stdin.readLineSync();
-      limparTela();
-    } else if (index == 5) {
-      print("Saindo...");
-      break;
+          if (veiculoEditar is Carro) {
+            veiculoEditar.quantidadePortas = lerInt('Novo número de portas:');
+          } else if (veiculoEditar is Moto) {
+            veiculoEditar.cilindradas = lerInt('Novo valor de cilindradas:');
+          }
+
+          print('\nVeículo editado com sucesso!');
+          print(veiculoEditar.exibirInformacoes());
+        } on ArgumentError catch (e) {
+          print('\nErro de validação: ${e.message}');
+        }
+        pausar();
+        limparTela();
+
+      // ── 5: Excluir Veículo ────────────────────────────────────────────────
+      case 5:
+        if (veiculos.isEmpty) {
+          print('Nenhum veículo cadastrado.');
+          pausar();
+          limparTela();
+          break;
+        }
+
+        final indexExcluir = selecionarVeiculo(veiculos, 'Excluir Veículo');
+        veiculos.removeAt(indexExcluir);
+        print('\nVeículo excluído com sucesso!');
+        pausar();
+        limparTela();
+
+      // ── 6: Alugar Veículo ─────────────────────────────────────────────────
+      case 6:
+        if (veiculos.isEmpty) {
+          print('Nenhum veículo cadastrado.');
+          pausar();
+          limparTela();
+          break;
+        }
+
+        final indexAlugar = selecionarVeiculo(veiculos, 'Alugar Veículo');
+        limparTela();
+
+        final dias = lerInt('Quantidade de dias:');
+        final veiculoAlugar = veiculos[indexAlugar];
+
+        try {
+          final valorTotal = veiculoAlugar.alugar(dias);
+
+          print('\nAluguel realizado com sucesso!');
+          print('Veículo: ${veiculoAlugar.modelo}');
+          print('Valor da diária: R\$ ${veiculoAlugar.valorDiaria.toStringAsFixed(2)}');
+          print('Quantidade de dias: $dias');
+          print('Valor total do aluguel: R\$ ${valorTotal.toStringAsFixed(2)}');
+          print('Quantidade disponível após o aluguel: ${veiculoAlugar.quantidade}');
+        } on ArgumentError catch (e) {
+          print('\nOperação inválida: ${e.message}');
+        } on StateError catch (e) {
+          print('\nOperação inválida: ${e.message}');
+        }
+        pausar();
+        limparTela();
+
+      // ── 0: Sair ───────────────────────────────────────────────────────────
+      case 0:
+        print('Saindo...');
+        return;
+
+      default:
+        print('Opção inválida. Tente novamente.');
+        pausar();
+        limparTela();
     }
   }
 }
