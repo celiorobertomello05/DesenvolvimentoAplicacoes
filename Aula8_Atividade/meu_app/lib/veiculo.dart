@@ -1,47 +1,79 @@
-abstract class Veiculo{
-     String _placa = "";
-     String _modelo = "";
-     double _valorDiaria = 0;
+abstract class Veiculo {
+  String _marca = "";
+  String _modelo = "";
+  double _valorDiaria = 0;
+  int _quantidade = 0;
 
+  Veiculo(String marca, String modelo, double valorDiaria, int quantidade) {
+    this.marca = marca;
+    this.modelo = modelo;
+    this.valorDiaria = valorDiaria;
+    this.quantidade = quantidade;
+  }
 
-    Veiculo (String placa, String modelo, double valorDiaria){
-        this.placa = placa;
-        this.modelo = modelo;
-        this.valorDiaria = valorDiaria;
+  // ── Getters ─────────────────────────────────────────────────────────────────
+
+  String get marca => _marca;
+  String get modelo => _modelo;
+  double get valorDiaria => _valorDiaria;
+  int get quantidade => _quantidade;
+
+  // ── Setters ─────────────────────────────────────────────────────────────────
+
+  set marca(String novaMarca) {
+    if (novaMarca.isEmpty) {
+      throw ArgumentError("A marca não pode ser vazia.");
     }
-    
-    String get placa => _placa;
+    _marca = novaMarca;
+  }
 
-    String get modelo => _modelo;
+  set modelo(String novoModelo) {
+    if (novoModelo.isEmpty) {
+      throw ArgumentError("O modelo não pode ser vazio.");
+    }
+    _modelo = novoModelo;
+  }
 
-    double get valorDiaria => _valorDiaria;
+  set valorDiaria(double novoValor) {
+    // Desafio exige valor MAIOR que zero (não apenas não-negativo)
+    if (novoValor <= 0) {
+      throw ArgumentError("O valor da diária deve ser maior que zero.");
+    }
+    _valorDiaria = novoValor;
+  }
 
-    set placa(String novaPlaca){
-        if(novaPlaca.isEmpty){
-            throw ArgumentError("Valor Inválido");            
-        }else {
-            _placa = novaPlaca;
-        }
+  set quantidade(int novaQuantidade) {
+    if (novaQuantidade < 0) {
+      throw ArgumentError("A quantidade não pode ser negativa.");
+    }
+    _quantidade = novaQuantidade;
+  }
+
+  // ── Método de aluguel ────────────────────────────────────────────────────────
+
+  /// Realiza o aluguel de uma unidade por [dias] dias.
+  /// Retorna o valor total cobrado.
+  /// Lança [ArgumentError] se os dias forem inválidos.
+  /// Lança [StateError] se não houver unidades disponíveis.
+  double alugar(int dias) {
+    if (dias <= 0) {
+      throw ArgumentError("A quantidade de dias deve ser maior que zero.");
+    }
+    if (_quantidade <= 0) {
+      throw StateError("Não há unidades disponíveis para este veículo.");
     }
 
-    set modelo(String novoModelo){
-        if(novoModelo.isEmpty){
-            throw ArgumentError("Valor Inválido");
-        }else{
-            _modelo = novoModelo;
-        }
-    }
+    double total = _valorDiaria * dias;
+    _quantidade--; // reduz diretamente o campo privado — acesso interno é válido
+    return total;
+  }
 
-    set valorDiaria(double novoValorDiaria){
-         if(novoValorDiaria < 0){
-             throw ArgumentError("Valor Inválido");
-            } else {
-            _valorDiaria = novoValorDiaria;
-        }
-    }
+  // ── Exibição ─────────────────────────────────────────────────────────────────
 
-    String exibirInformacoes(){
-      return "Placa: $placa\nModelo: $modelo\n,Valor da Diária: $valorDiaria\n"; 
-    }
-    
-    }
+  String exibirInformacoes() {
+    return "Marca: $marca\n"
+        "Modelo: $modelo\n"
+        "Valor da Diária: R\$ ${valorDiaria.toStringAsFixed(2)}\n"
+        "Quantidade disponível: $quantidade\n";
+  }
+}

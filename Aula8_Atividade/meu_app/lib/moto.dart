@@ -1,26 +1,37 @@
 import 'package:meu_app/veiculo.dart';
 
-class Moto extends Veiculo{
+class Moto extends Veiculo {
   int _cilindradas = 0;
 
-  Moto(String placa, String modelo, double valorDiaria, int cilindradas):super(placa, modelo, valorDiaria){
+  Moto(
+    String marca,
+    String modelo,
+    double valorDiaria,
+    int quantidade,
+    int cilindradas,
+  ) : super(marca, modelo, valorDiaria, quantidade) {
     this.cilindradas = cilindradas;
-
   }
+
+  // ── Getter / Setter ──────────────────────────────────────────────────────────
 
   int get cilindradas => _cilindradas;
 
-set cilindradas(int novaCilindrada){
-         if(novaCilindrada < 0){
-             throw ArgumentError("Valor Inválido");
-            } else {
-            _cilindradas = novaCilindrada;
-        }
+  set cilindradas(int novaCilindrada) {
+    if (novaCilindrada < 0) {
+      throw ArgumentError("O valor de cilindradas não pode ser negativo.");
     }
+    _cilindradas = novaCilindrada;
+  }
 
-@override
+  // ── Exibição ─────────────────────────────────────────────────────────────────
+
+  @override
   String exibirInformacoes() {
-    return "Placa: $placa\nModelo: $modelo\nValor da Diária: $valorDiaria\nCilindradas: $cilindradas\n";
+    return "Marca: $marca\n"
+        "Modelo: $modelo\n"
+        "Valor da Diária: R\$ ${valorDiaria.toStringAsFixed(2)}\n"
+        "Cilindradas: $cilindradas cc\n"
+        "Quantidade disponível: $quantidade\n";
   }
-  }
-  
+}
