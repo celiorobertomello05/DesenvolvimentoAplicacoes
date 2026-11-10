@@ -1,0 +1,12 @@
+# Dart / Flutter
+.dart_tool/
+build/
+.packages
+
+# Segredos
+.env
+*.env
+!.env.example
+
+# Arquivos compactados
+*.zip
