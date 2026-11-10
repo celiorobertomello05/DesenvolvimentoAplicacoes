@@ -17,6 +17,13 @@ As aulas começam com a linguagem **Dart** (terminal), passam por **Programaçã
 | 09 | Flutter | Primeiros apps: relógio digital, tipos de função (Dado da Sorte) e Desafio dos 7 Dias | [aula-09-flutter](aula-09-flutter) |
 | 10 | BaaS com Supabase | CRUD (criar, ler, atualizar e excluir) em um banco Supabase a partir do Dart | [aula-10-baas-supabase](aula-10-baas-supabase) |
 
+## Professores
+
+| Professor | Parte da disciplina | GitHub | LinkedIn |
+|-----------|---------------------|--------|----------|
+| Pedro Henrique Miho de Souza | Dart e POO (aulas 02 a 08 e 10) | [@PedroMiho](https://github.com/PedroMiho) | [pedro-miho](https://www.linkedin.com/in/pedro-miho/) |
+| Flávio Francisco da Silva | Flutter (aula 09) | [@flavio-lab](https://github.com/flavio-lab) | [flaviosprofile](https://www.linkedin.com/in/flaviosprofile/) |
+
 ## Como rodar
 
 - Projetos Dart (aulas 02 a 08 e 10): entre na pasta, rode `dart pub get` e depois `dart run`.
