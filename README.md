@@ -16,17 +16,19 @@ As aulas começam com a linguagem **Dart** (terminal), passam por **Programaçã
 | 08 | Atividade: Locadora de Veículos | Classe abstrata, herança e encapsulamento num sistema com menu no terminal | [aula-08-locadora-veiculos](aula-08-locadora-veiculos) |
 | 09 | Flutter | Primeiros apps: relógio digital, tipos de função (Dado da Sorte) e Desafio dos 7 Dias | [aula-09-flutter](aula-09-flutter) |
 | 10 | BaaS com Supabase | CRUD (criar, ler, atualizar e excluir) em um banco Supabase a partir do Dart | [aula-10-baas-supabase](aula-10-baas-supabase) |
+| Desafio | Cadastro de Veículos (Dart + Supabase) | Menu em `while` no terminal, validação das entradas e CRUD da tabela `veiculos` no Supabase | [Desafio_Veiculos_Dart_Supabase](Desafio_Veiculos_Dart_Supabase) |
 
 ## Professores
 
 | Professor | Parte da disciplina | GitHub | LinkedIn |
 |-----------|---------------------|--------|----------|
-| Pedro Henrique Miho de Souza | Dart e POO (aulas 02 a 08 e 10) | [@PedroMiho](https://github.com/PedroMiho) | [pedro-miho](https://www.linkedin.com/in/pedro-miho/) |
+| Pedro Henrique Miho de Souza | Dart e POO (aulas 02 a 08 e 10, e Desafio de Veículos) | [@PedroMiho](https://github.com/PedroMiho) | [pedro-miho](https://www.linkedin.com/in/pedro-miho/) |
 | Flávio Francisco da Silva | Flutter (aula 09) | [@flavio-lab](https://github.com/flavio-lab) | [flaviosprofile](https://www.linkedin.com/in/flaviosprofile/) |
 
 ## Como rodar
 
-- Projetos Dart (aulas 02 a 08 e 10): entre na pasta, rode `dart pub get` e depois `dart run`.
+- Projetos Dart (aulas 02 a 08, 10 e o Desafio de Veículos): entre na pasta, rode `dart pub get` e depois `dart run`.
+- Projetos com Supabase (aula 10 e Desafio): copie `.env.example` para `.env` e preencha a URL e a chave antes de rodar.
 - Projetos Flutter (aula 09): entre na pasta do app, rode `flutter pub get` e depois `flutter run`.
 
 Cada pasta tem um README próprio com o assunto da aula e os comandos.
